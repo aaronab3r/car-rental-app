@@ -1,3 +1,21 @@
+import React from "react";
+import CarCard from "./CarCard";
+
+function CarsList(props: any) {
+  return (
+    <div>
+      {props.carsList.map((car: any, index: number) => (
+        <div key={car.id || index}>
+          <CarCard car={car} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default CarsList;
+
+/* 
 import React from 'react'
 import CarCard from './CarCard'
 
@@ -13,4 +31,5 @@ function CarsList(props:any) {
   )
 }
 
-export default CarsList
+export default CarsList 
+*/
