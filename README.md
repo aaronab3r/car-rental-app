@@ -1,5 +1,3 @@
 # car-rental-app
 
-Currently running into an error "TypeError: Cannot read properties of undefined (reading 'map')"
-Trying to solve it ASAP but I am deploying what I currently have.
-
+Fixed the error I was stuck on for a while "undefined (reading 'map')". I debugged it and figured it out. Hopefully should have the entire app done soon
