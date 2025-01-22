@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { getStoreLocations } from "@/services";
+import { createBooking, getStoreLocations } from "@/services";
 
 function Form({ car, initialLocations = [] }: { car: any; initialLocations: any[] }) {
   const [storeLocation, setStoreLocation] = useState<any[]>(initialLocations);
-  const [pickUpLocation, setPickUpLocation] = useState("");
-  const [pickUpDate, setPickUpDate] = useState("");
-  const [dropOffDate, setDropOffDate] = useState("");
-  const [pickUpTime, setPickUpTime] = useState("");
-  const [dropOffTime, setDropOffTime] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
+  const [formValue, setFormValue] = useState({
+    pickUpLocation: "",
+    pickUpDate: "",
+    dropOffDate: "",
+    pickUpTime: "",
+    dropOffTime: "",
+    contactNumber: "",
+    userName: "Aaron Aberasturia",
+    carId: "", // Keep carId as a string
+  });
 
   useEffect(() => {
+    // Fetch store locations if not provided
     if (initialLocations.length === 0) {
       const getStoreLocation_ = async () => {
         const resp: any = await getStoreLocations();
@@ -19,6 +24,30 @@ function Form({ car, initialLocations = [] }: { car: any; initialLocations: any[
       getStoreLocation_();
     }
   }, [initialLocations]);
+
+  useEffect(() => {
+    // Update carId when a car is provided
+    if (car && car.id) {
+      setFormValue((prev) => ({
+        ...prev,
+        carId: car.id, // Update carId as a simple string
+      }));
+    }
+  }, [car]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setFormValue((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit=async()=>{
+    console.log(formValue); // Log form values, including carId
+    const resp=await createBooking(formValue);
+    console.log(resp)
+  };
 
   return (
     <div className="p-5 max-w-md mx-auto">
@@ -30,8 +59,9 @@ function Form({ car, initialLocations = [] }: { car: any; initialLocations: any[
         {storeLocation.length > 0 ? (
           <select
             id="pickUpLocation"
-            value={pickUpLocation}
-            onChange={(e) => setPickUpLocation(e.target.value)}
+            name="pickUpLocation"
+            onChange={handleChange}
+            value={formValue.pickUpLocation}
             className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="" disabled>
@@ -56,8 +86,9 @@ function Form({ car, initialLocations = [] }: { car: any; initialLocations: any[
         <input
           type="date"
           id="pickUpDate"
-          value={pickUpDate}
-          onChange={(e) => setPickUpDate(e.target.value)}
+          name="pickUpDate"
+          onChange={handleChange}
+          value={formValue.pickUpDate}
           className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
@@ -70,8 +101,9 @@ function Form({ car, initialLocations = [] }: { car: any; initialLocations: any[
         <input
           type="date"
           id="dropOffDate"
-          value={dropOffDate}
-          onChange={(e) => setDropOffDate(e.target.value)}
+          name="dropOffDate"
+          onChange={handleChange}
+          value={formValue.dropOffDate}
           className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
@@ -84,8 +116,9 @@ function Form({ car, initialLocations = [] }: { car: any; initialLocations: any[
         <input
           type="time"
           id="pickUpTime"
-          value={pickUpTime}
-          onChange={(e) => setPickUpTime(e.target.value)}
+          name="pickUpTime"
+          onChange={handleChange}
+          value={formValue.pickUpTime}
           className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
@@ -98,8 +131,9 @@ function Form({ car, initialLocations = [] }: { car: any; initialLocations: any[
         <input
           type="time"
           id="dropOffTime"
-          value={dropOffTime}
-          onChange={(e) => setDropOffTime(e.target.value)}
+          name="dropOffTime"
+          onChange={handleChange}
+          value={formValue.dropOffTime}
           className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
@@ -112,11 +146,28 @@ function Form({ car, initialLocations = [] }: { car: any; initialLocations: any[
         <input
           type="tel"
           id="contactNumber"
-          value={contactNumber}
-          onChange={(e) => setContactNumber(e.target.value)}
+          name="contactNumber"
+          onChange={handleChange}
+          value={formValue.contactNumber}
           className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           placeholder="Enter your phone number"
         />
+      </div>
+
+      {/* Buttons */}
+      <div className="modal-action">
+        <button
+          className="btn"
+          onClick={() => (document.getElementById("my_modal_4") as HTMLDialogElement)?.close()}
+        >
+          Close
+        </button>
+        <button
+          className="btn bg-blue-500 text-white hover:bg-blue-800"
+          onClick={handleSubmit}
+        >
+          Save
+        </button>
       </div>
     </div>
   );

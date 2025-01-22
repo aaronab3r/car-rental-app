@@ -22,10 +22,6 @@ function BookingModal({
           <Form car={car} initialLocations={initialLocations} />
         </div>
       </div>
-      <div className="modal-action">
-        <button className="btn" onClick={() => (document.getElementById("my_modal_4") as HTMLDialogElement)?.close()}>Close</button>
-        <button className="btn bg-blue-500 text-white hover:bg-blue-800">Save</button>
-      </div>
     </div>
   );
 }
